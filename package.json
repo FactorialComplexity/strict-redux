@@ -1,0 +1,29 @@
+{
+  "name": "strict-redux",
+  "version": "0.0.1",
+  "description": "A wrapper around vanilla redux store which reduces boilerplate code and enforces some costraints, improving separation of concerns and code maintainability",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc": "./node_modules/.bin/jsdoc  -c jsdoc.json -R README.md -d doc src/StrictRedux.js"
+  },
+  "keywords": [
+    "redux"
+  ],
+  "author": "Illia Simenko",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.18.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "jsdoc": "^3.5.5"
+  },
+  "dependencies": {
+    "redux": "^3.7.2"
+  }
+}
