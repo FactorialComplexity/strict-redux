@@ -117,9 +117,15 @@ class StrictRedux {
 
   /**
    * @method
-   * @return {string[]} Array af all known actions
+   * @param {string=} queryString - Query, describing actions. If omitted, all action types will be returned
+   * @return {Object} List all known actions, fitting the query
    */
-  getActionTypes = () => Object.keys(this._actionCreators).reduce((acc, name) => ({...acc, [name]: name}), {})
+  getActionTypes = (queryString) => {
+    if (queryString) {
+      return this._normalizeQuery(queryString, '_actionCreators').reduce((acc, name) => ({ ...acc, [name]: name }), {})
+    }
+    return Object.keys(this._actionCreators).reduce((acc, name) => ({...acc, [name]: name}), {})
+  }
 
   /**
    * @method
