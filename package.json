@@ -12,7 +12,6 @@
     "build:umd:min": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/strict-redux.min.js",
     "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "clean": "rimraf lib dist es",
-    "jsdoc": "jsdoc -c .jsdocrc ./src",
     "prepublish": "npm run clean && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "doc": "./node_modules/.bin/jsdoc  -c jsdoc.json -R README.md -d doc src/StrictRedux.js"
