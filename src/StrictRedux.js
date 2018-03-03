@@ -192,7 +192,7 @@ class StrictRedux {
     const sliceActionType = action.type.split(SliceSeparator)[1]
 
     if (action.type.startsWith(sliceDescriptor.sliceName) && sliceDescriptor.actionReducers[sliceActionType]) {
-      return { ...state, ...sliceDescriptor.actionReducers[sliceActionType](state, action) }
+      return { ...state, ...sliceDescriptor.actionReducers[sliceActionType](state, action.payload) }
     } else {
       return state
     }
