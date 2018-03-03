@@ -2,9 +2,9 @@
 Vanilla Redux requires to much boilerplate and does not enforce enough constraints on how to structure state data and state management code. Strict-redux uses more opinionated approach, allowing to write more succinct and maintainable code.
 
 ## Main Concepts
-Strict-redux enforces breaking of state management code into slices, which are as isolated one from another, as possible. While in vanilla Redux you cannot mutate state directly, but only via actions, in strict-redux you also cannot read the state directly, but only via selectors. State slices crosstalk is also constarined - there is no way to update different state slices in one reducer function, and selectors may read another state slice only via that slice's selectors. 
+Strict-redux enforces breaking state management code into slices, which are as isolated one from another, as possible. While in vanilla Redux you can mutate state only via actions, but not directly, in strict-redux you also cannot read the state directly, but only via selectors. State slices cross-talk is also constarined - there is no way to update different state slices in one reducer function, and selectors may read another state slice only via that slice's selectors. 
 
-Each slice is described with a slice descriptor object, containing four properties - `sliceName`, `initialState`, `actionReducers` and optional `createSliceSelectors` factory function. Slice name and initial state are self-evident. Action reducer is an object, each key of which is an action name and value is a reducer function. Selectors factory is a function which receives two strict-redux public methods for accessing other slices state and returns an object with custom selectors. 
+Each slice is described with a slice descriptor object, containing four properties - `sliceName`, `initialState`, `actionReducers` and optional `createSelectors` factory function. Slice name and initial state are self-evident. Action reducer is an object, each key of which is an action name and value is a reducer function. As each reducer function works with single action type, it receives action payload instead of the whole action. State changes are merged into state automatically, so you don't need to repeat `Object.assign()` `{...stateSlice, /* new state */}` in each reducer function. Selectors factory is a function which receives two strict-redux public methods for accessing other slices state and returns an object with custom selectors. 
 
 Other parts of your application access state and actions via queries. Each query is a string, consisting of one or many clauses, separated by commas. Each clause is either a full selector or action name, or a slice name. In the latter case, query result is an object, containing all selectors or actions in the slice.
 
@@ -32,7 +32,7 @@ You only have to write selectors that somehow transform state, combine informati
 ```
 `auth_isLoggingIn`, `auth_user`, and `auth_error` selectors will be created automatically. Let's suppose you decide it would be conveniet to have another selector `auth_isLoggedIn`, which returns true if `user` property is not empty. You have to write the following selector factory:
 ```
-export function createSliceSelectors (select, selectOne) {
+export function createSelectors (select, selectOne) {
   return {
     isLoggedIn: stateSlice => !!stateSlice.user
   }
@@ -66,7 +66,7 @@ You cannot access state directly. As with `dispatch()`, the only way to get orig
 Typical example of `options` is `ownProps` object, used by react-redux's `connect()` function. `state` is almost always used only intrernally in `createMapStateToProps()` method, because `connect()` passes current state to `mapStateToProps()` by itself. In most cases you will call `select()` with just on argument - query string. Current state is attached automatically by calling `getState()` right before the moment of selector call. 
 
 ## Memoized selectors
-Strict-redux supports usage of memoized selectors, created by reselect library. As each selector defined in the `createSliceSelectors` factory gets only its own state slice, but not the whole state, it have to call selectors from other state slices. But memoized selector, created by reselect's `createSelector()` would not even be called, if it gets the same argumnents as in previous call. If our selector depends on other state slices, it would not notice changes in that slices, and would return incorrect value. To alleviate this, strict-redux saves a reference to previous whole state for each slice selector and passes a brand-new shallow copy of a state slice into selector each time the whole state changed anywhere, not just in that slice, thus informing memoized selector that it should recalculate its result.
+Strict-redux supports usage of memoized selectors, created by reselect library. As each selector defined in the `createSelectors` factory gets only its own state slice, but not the whole state, it have to call selectors from other state slices. But memoized selector, created by reselect's `createSelector()` would not even be called, if it gets the same argumnents as in previous call. If our selector depends on other state slices, it would not notice changes in that slices, and would return incorrect value. To alleviate this, strict-redux saves a reference to previous whole state for each slice selector and passes a brand-new shallow copy of a state slice into selector each time the whole state changed anywhere, not just in that slice, thus informing memoized selector that it should recalculate its result.
 
 ## Recommended application structure
 Strict-redux was written with the following applictioan structure in mind. Application consisits of at least three subsystems - state, UI and domain logic. UI and domain logic are not aware of each other's existance and communicate only via state. State is not aware of both of them and just reacts on actions and selector calls, distinguishing UI and and domian only with slight interface differences, such as `createMapStateToProps()` wrapper around `getSelectors()`. Typical UI component is connected to state like this:
@@ -121,31 +121,31 @@ export const initialState = {
 }
 
 export const actionReducers = {
-  login: (stateSlice, action) => ({
+  login: (stateSlice, payload) => ({
     isLoggingIn: true,
-    credentials: action.payload
+    credentials: payload
     error: undefined
   }),
 
-  loginSuccess: (stateSlice, action) => ({
+  loginSuccess: (stateSlice, payload) => ({
     isLoggingIn: false,
     error: undefined,
     credentials: undefined,
-    user: action.payload
+    user: payload
   }),
 
-  loginError: (stateSlice, action) => ({
+  loginError: (stateSlice, payload) => ({
     isLoggingIn: false,
     credentials: undefined,
-    error: action.payload.toString()
+    error: payload.toString()
   }),
 
-  logout: (stateSlice, action) => ({
+  logout: (stateSlice, payload) => ({
     user: undefined
   })
 }
 
-export function createSliceSelectors (select, selectOne) {
+export function createSelectors (select, selectOne) {
   return {
     isLoggedIn: stateSlice => !!stateSlice.user
   }

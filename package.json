@@ -1,6 +1,6 @@
 {
   "name": "strict-redux",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A wrapper around vanilla redux store which reduces boilerplate code and enforces some costraints, improving separation of concerns and code maintainability",
   "main": "lib/index.js",
   "module": "es/index.js",
