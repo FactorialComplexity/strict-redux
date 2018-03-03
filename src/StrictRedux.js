@@ -204,8 +204,8 @@ class StrictRedux {
     const defaultSelectors = createDefaultSelectors(sliceDescriptor)
 
     let allSelectors
-    if (typeof sliceDescriptor.createSliceSelectors === 'function') {
-      allSelectors = { ...defaultSelectors, ...sliceDescriptor.createSliceSelectors(this.select, this.selectOne) }
+    if (typeof sliceDescriptor.createSelectors === 'function') {
+      allSelectors = { ...defaultSelectors, ...sliceDescriptor.createSelectors(this.select, this.selectOne) }
     } else {
       allSelectors = defaultSelectors
     }
@@ -275,5 +275,5 @@ export default StrictRedux
  * @property {string} sliceName - Name of a state slice
  * @property {Object} initialState - Initial values of a state slice
  * @property {Object} actionReducers - Reducer functions for each supported action. Keys of this object are used to generate action creators and values are reducer functions
- * @property {Function=} createSliceSelectors - Gets [select]{@link StrictRedux#select} and [selectOne]{@link StrictRedux#selectOne} methods of a StrictRedux instance and returns an object with custom selector functions for this slice. There is no need to create primitive getters manually, as they are generated automatically for each initialState property
+ * @property {Function=} createSelectors - Gets [select]{@link StrictRedux#select} and [selectOne]{@link StrictRedux#selectOne} methods of a StrictRedux instance and returns an object with custom selector functions for this slice. There is no need to create primitive getters manually, as they are generated automatically for each initialState property
  */
