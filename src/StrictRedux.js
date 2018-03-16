@@ -4,7 +4,7 @@ const SliceSeparator = '_'
 const QuerySeparator = ','
 
 /**
- * @class StrictRedux
+ * @class
  * StrictRedux class is a wrapper around vanilla redux store which reduces
  * boilerplate code and enforces some constraints, improving separation of concerns
  * and code maintainability.
@@ -12,7 +12,7 @@ const QuerySeparator = ','
 class StrictRedux {
   /**
    * @param {Object[]} slices - State slice descriptors
-   * @param {Function[]?} middlewareFactories - Array of middleware creator. Each
+   * @param {Function[]?} middlewareFactories - Array of middleware creators. Each
    * middleware creator gets a single argument - reference to a StrictRedux instance.
    */
   constructor (slices, middlewareFactories = []) {
@@ -48,8 +48,8 @@ class StrictRedux {
    * @method
    * @param {string} selectorName - Selector's full name
    * @param {Object=} options - Options, passed to selector
-   * @param {Object=} state - State object which will be passed to a selector. If omitted, state returned by redux store.getState() method will be returned
-   * @return {*} Any value, returned by selector function
+   * @param {Object=} state - State object which will be passed to a selector. If omitted, state returned by redux store.getState() method will be used
+   * @return {*} Any value, returned by the selector function
    * @throws An error if there is no selector with such name
    */
   selectOne = (selectorName, options, state) => this.getSelector(selectorName)(options, state)
@@ -58,7 +58,7 @@ class StrictRedux {
    * @method
    * @param {string} queryString - Query, describing needed selectors. See [getSelectors]{@link StrictRedux#getSelectors}
    * @param {Object=} options - Options, passed to each selector
-   * @param {Object=} state - State object which will be passed to each selector. If omitted, state returned by redux store.getState() method will be returned
+   * @param {Object=} state - State object which will be passed to each selector. If omitted, state returned by redux store.getState() method will be used
    * @return {Object} Object, containing values, returned by each selector function
    * @throws An error if there is no selectors fitting any of the query clauses
    */
@@ -107,7 +107,7 @@ class StrictRedux {
   createMapDispatchToProps = queryString => () => this.getActions(queryString)
 
   /**
-   * Convenience method, used to re-dispatch already created actions, caught by middleware
+   * Convenience method, used to re-dispatch already created actions caught by middleware
    * @method
    * @param {Object} action - FSA-compliant action.
    * @return {*} - Result of action creator call
@@ -118,7 +118,7 @@ class StrictRedux {
   /**
    * @method
    * @param {string=} queryString - Query, describing actions. If omitted, all action types will be returned
-   * @return {Object} List all known actions, fitting the query
+   * @return {Object} List all known actions that match the query
    */
   getActionTypes = (queryString) => {
     if (queryString) {
@@ -274,6 +274,6 @@ export default StrictRedux
  * @namespace sliceDescriptor
  * @property {string} sliceName - Name of a state slice
  * @property {Object} initialState - Initial values of a state slice
- * @property {Object} actionReducers - Reducer functions for each supported action. Keys of this object are used to generate action creators and values are reducer functions
+ * @property {Object} actionReducers - Reducer functions for each supported action. Keys of this object are used to generate action creators, values are reducer functions
  * @property {Function=} createSelectors - Gets [select]{@link StrictRedux#select} and [selectOne]{@link StrictRedux#selectOne} methods of a StrictRedux instance and returns an object with custom selector functions for this slice. There is no need to create primitive getters manually, as they are generated automatically for each initialState property
  */
